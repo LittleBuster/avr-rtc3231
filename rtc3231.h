@@ -1,6 +1,6 @@
 /* DS3231 Real Time Clock AVR Lirary
  *
- * Copyright (C) 2016 Sergey Denisov.
+ * Copyright (C) 2016-2017 Sergey Denisov.
  * Written by Sergey Denisov aka LittleBuster (DenisovS21@gmail.com)
  *
  * This library is free software; you can redistribute it and/or
@@ -16,8 +16,8 @@
 
 #include <stdio.h>
 
-#define RTC_WADDR 0xD0
-#define RTC_RADDR 0xD1
+#define RTC_WADDR 0b11010000
+#define RTC_RADDR 0b11010001
 
 struct rtc_time
 {

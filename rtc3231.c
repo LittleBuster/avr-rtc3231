@@ -1,6 +1,6 @@
 /* DS3231 Real Time Clock AVR Lirary
  *
- * Copyright (C) 2016 Sergey Denisov.
+ * Copyright (C) 2016-2017 Sergey Denisov.
  * Written by Sergey Denisov aka LittleBuster (DenisovS21@gmail.com)
  *
  * This library is free software; you can redistribute it and/or
@@ -18,21 +18,22 @@ static unsigned char bcd (unsigned char data)
 {
 	unsigned char bc;
 
-	bc = ((((data & (1 << 6))|(data & (1 << 5))|
-			(data & (1 << 4))) * 0x0A) >> 4) + ((data & (1 << 3))|
-			(data & (1 << 2))|(data & (1 << 1))|(data & 0x01));
-	return bc;
+	bc = ((((data & (1 << 6)) | (data & (1 << 5)) | (data & (1 << 4)))*0x0A) >> 4)
+	+ ((data & (1 << 3))|(data & (1 << 2))|(data & (1 << 1))|(data & 0x01));
+
+  return bc;
 }
 
 static unsigned char bin(unsigned char dec)
 {
 	char bcd;
-	char dig, num, count;
+	char n, dig, num, count;
 
 	num = dec;
 	count = 0;
 	bcd = 0;
-	for (uint8_t n = 0; n < 4; n++) {
+
+	for (n = 0; n < 4; n++) {
 		dig = num % 10;
 		num = num / 10;
 		bcd = (dig << count) | bcd;
@@ -83,7 +84,7 @@ void rtc3231_read_date(struct rtc_date *date)
 	date->wday = bcd(i2c_recv_byte());
 	date->day = bcd(i2c_recv_byte());
 	date->month = bcd(i2c_recv_byte());
-	date->year = bcd(i2c_recv_byte());
+	date->year = bcd(i2c_recv_last_byte());
 	i2c_stop_condition();
 }
 
@@ -103,7 +104,7 @@ void rtc3231_read_datetime(struct rtc_time *time, struct rtc_date *date)
 	date->wday = bcd(i2c_recv_byte());
 	date->day = bcd(i2c_recv_byte());
 	date->month = bcd(i2c_recv_byte());
-	date->year = bcd(i2c_recv_byte());
+	date->year = bcd(i2c_recv_last_byte());
 	i2c_stop_condition();
 }
 
